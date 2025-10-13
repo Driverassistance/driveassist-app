@@ -3,11 +3,12 @@ name: EAS Preview
 on:
   pull_request:
     branches: ["main"]
-  workflow_dispatch: {}  # позволит запускать вручную из Actions
+  workflow_dispatch: {}
 
 jobs:
   preview:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,11 +33,12 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EAS_TOKEN }}
 
-      - name: Debug (optional)
+      - name: Preflight (init project non-interactive)
         run: |
-          node -v
-          npm -v
-          eas --version
+          echo "== whoami =="
+          eas whoami
+          echo "== init =="
+          eas init --non-interactive || true
           echo "== expo config json =="
           npx expo config --json || true
 
