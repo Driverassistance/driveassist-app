@@ -16,7 +16,8 @@ import * as Notifications from "expo-notifications";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "react-native";
 import { FlatList } from "react-native";
-
+import { create } from "twrnc";
+const tw = create(require("./tailwind.config.js"));
 
 
 
@@ -51,8 +52,7 @@ async function saveMyCarService(svc){
     { key:"fluids", label:"ПЗМ" },
     { key:"other", label:"Прочие затраты" },
   ];
-// Tailwind helper
-const tw = twrnc;
+
 
 /**
  * DriveAssist v7.3 (Snack, согласовано с Ереке)
