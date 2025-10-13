@@ -1,0 +1,8 @@
+﻿{
+  "cli": { "version": ">= 11.0.0" },
+  "build": {
+    "preview": { "developmentClient": false, "distribution": "internal" },
+    "production": { "autoIncrement": true }
+  },
+  "submit": { "production": {} }
+}
