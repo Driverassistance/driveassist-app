@@ -1,15 +1,23 @@
 name: Feature
 description: Новая фича
 title: "[Feat]: "
-labels: ["feature"]
+labels:
+  - feature
 body:
   - type: input
     id: goal
-    attributes: { label: Цель, placeholder: Что даёт пользователю? }
-    validations: { required: true }
+    attributes:
+      label: "Цель"
+      placeholder: "Что даёт пользователю?"
+    validations:
+      required: true
   - type: textarea
     id: scope
-    attributes: { label: Объем, description: Экраны, состояния, ошибки }
+    attributes:
+      label: "Объем"
+      description: "Экраны, состояния, ошибки"
   - type: input
     id: due
-    attributes: { label: Дедлайн (ДД.ММ), placeholder: 31.10 }
+    attributes:
+      label: "Дедлайн (ДД.ММ)"
+      placeholder: "31.10"
