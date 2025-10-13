@@ -2,7 +2,11 @@ name: EAS Preview
 
 on:
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
+  push:
+    branches:
+      - main
+      - feature/**
   workflow_dispatch: {}
 
 jobs:
@@ -35,12 +39,10 @@ jobs:
 
       - name: Preflight (init project non-interactive)
         run: |
-          echo "== whoami =="
-          eas whoami
-          echo "== init =="
-          eas init --non-interactive || true
-          echo "== expo config json =="
-          npx expo config --json || true
+          echo "== whoami ==" && eas whoami
+          echo "== init ==" && eas init --non-interactive || true
+          echo "== expo config json ==" && npx expo config --json || true
+          echo "== eas --version ==" && eas --version
 
       - name: Build Android preview
         run: eas build --platform android --profile preview --non-interactive --no-wait
