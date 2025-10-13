@@ -1,36 +1,22 @@
 {
   "expo": {
-    "name": "driveassist",
+    "name": "DriveAssist",
     "slug": "driveassist",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.driverassistance.driveassist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
+      "edgeToEdgeEnabled": true,
+      "package": "com.driverassistance.driveassist"   // ← ВОТ ЭТО ОБЯЗАТЕЛЬНО
     },
 
     "owner": "driveassist",
-    "extra": {
-      "eas": {
-        "projectId": "d4d5da37-88bd-4452-8290-51fedfcf86fb"
-      }
-    }
+    "extra": { "eas": { "projectId": " d4d5da37-88bd-4452-8290-51fedfcf86fb " } }
   }
 }
