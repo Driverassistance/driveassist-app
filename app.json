@@ -1,21 +1,31 @@
 ﻿{
   "expo": {
-    "name": "twrnc",
-    "slug": "snack-38871327-5999-4140-9f8d-d3e6c47def50",
+    "name": "DriveAssist",
+    "slug": "driveassist",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "splash": { "image": "./assets/splash-icon.png", "resizeMode": "contain", "backgroundColor": "#ffffff" },
-    "ios": { "supportsTablet": true },
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.driverassistance.driveassist"
+    },
     "android": {
-      "adaptiveIcon": { "foregroundImage": "./assets/adaptive-icon.png", "backgroundColor": "#ffffff" },
-      "edgeToEdgeEnabled": true
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.driverassistance.driveassist"
     },
     "web": { "favicon": "./assets/favicon.png" },
-
     "owner": "driveassist",
-    "extra": { "eas": { "projectId": "PASTE-YOUR-UUID-HERE" } }
+    "extra": { "eas": { "projectId": "ТВОЙ-UUID-ИЗ-expo.dev" } }
   }
 }
