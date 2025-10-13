@@ -1,6 +1,6 @@
 ﻿{
   "expo": {
-    "name": "driveassist",
+    "name": "DriveAssist",
     "slug": "driveassist",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -24,14 +24,8 @@
       "edgeToEdgeEnabled": true,
       "package": "com.driverassistance.driveassist"
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
+    "web": { "favicon": "./assets/favicon.png" },
     "owner": "driveassist",
-    "extra": {
-      "eas": {
-        "projectId": "d4d5da37-88bd-4452-8290-51fedfcf86fb"
-      }
-    }
+    "extra": { "eas": { "projectId": "d4d5da37-88bd-4452-8290-51fedfcf86fb" } }
   }
 }

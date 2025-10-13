@@ -1,16 +1,16 @@
 ﻿{
-  "cli": {
-    "version": ">= 11.0.0",
-    "appVersionSource": "remote"
-  },
   "build": {
     "preview": {
-      "developmentClient": false,
-      "distribution": "internal",
-      "android": { "image": "latest" },
-      "ios": { "image": "latest" }
+      "distribution": "internal"
     },
-    "production": { "autoIncrement": true }
+    "production": {
+      "distribution": "store"
+    }
   },
-  "submit": { "production": {} }
+  "cli": {
+    "appVersionSource": "remote"
+  },
+  "submit": {
+    "production": {}
+  }
 }
