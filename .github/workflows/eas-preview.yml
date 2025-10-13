@@ -6,18 +6,39 @@ jobs:
   preview:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
-      - name: Install deps
-        run: npm ci || npm i
-      - uses: expo/expo-github-action@v8
+
+      - name: Install deps (robust)
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci || npm i
+          else
+            npm i
+          fi
+
+      - name: Expo/EAS login
+        uses: expo/expo-github-action@v8
         with:
           eas-version: latest
           token: ${{ secrets.EAS_TOKEN }}
+
+      - name: Debug (optional)
+        run: |
+          node -v
+          npm -v
+          eas --version
+          echo "== expo config json =="
+          npx expo config --json || true
+
       - name: Build Android preview
-        run: npx eas build --platform android --profile preview --non-interactive --no-wait
+        run: eas build --platform android --profile preview --non-interactive --no-wait
+
       - name: Build iOS preview
-        run: npx eas build --platform ios --profile preview --non-interactive --no-wait
+        run: eas build --platform ios --profile preview --non-interactive --no-wait
