@@ -1,18 +1,15 @@
 name: EAS Preview
 
 on:
-  pull_request:
-    branches: [ "main" ]
   push:
-    branches:
-      - main
-      - feature/**
+    branches: [main, "feature/**"]
+  pull_request:
+    branches: [main]
   workflow_dispatch: {}
 
 jobs:
   preview:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,12 +22,9 @@ jobs:
 
       - name: Install deps (robust)
         run: |
-          if [ -f package-lock.json ]; then
-            npm ci || npm i
-          else
-            npm i
-          fi
+          if [ -f package-lock.json ]; then npm ci; else npm i; fi
 
+      # >>> ОБЯЗАТЕЛЬНО: логин в EAS по токену <<<
       - name: Expo/EAS login
         uses: expo/expo-github-action@v8
         with:
@@ -47,5 +41,5 @@ jobs:
       - name: Build Android preview
         run: eas build --platform android --profile preview --non-interactive --no-wait
 
-      - name: Build iOS preview
-        run: eas build --platform ios --profile preview --non-interactive --no-wait
+      # - name: Build iOS preview
+      #   run: eas build --platform ios --profile preview --non-interactive --no-wait
