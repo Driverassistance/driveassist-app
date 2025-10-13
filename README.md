@@ -11,3 +11,5 @@ If you're having problems, you can tweet to us [@expo](https://twitter.com/expo)
 Snack is Open Source. You can find the code on the [GitHub repo](https://github.com/expo/snack).
 
 Run CI: 2025-10-13T13:00:05
+
+Re-run CI at 2025-10-13T13:14:08
