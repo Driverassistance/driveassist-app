@@ -1,18 +1,26 @@
 name: Bug report
 description: Сообщение об ошибке
 title: "[Bug]: "
-labels: ["bug"]
+labels:
+  - bug
 body:
   - type: textarea
     id: steps
-    attributes: { label: Шаги воспроизведения, placeholder: "1) ... 2) ..." }
-    validations: { required: true }
+    attributes:
+      label: "Шаги воспроизведения"
+      placeholder: "1) ... 2) ..."
+    validations:
+      required: true
   - type: input
     id: expected
-    attributes: { label: Ожидаемое поведение }
+    attributes:
+      label: "Ожидаемое поведение"
   - type: input
     id: actual
-    attributes: { label: Фактическое поведение }
+    attributes:
+      label: "Фактическое поведение"
   - type: textarea
     id: env
-    attributes: { label: Окружение, placeholder: "OS/Device, версия" }
+    attributes:
+      label: "Окружение"
+      placeholder: "OS/Device, версия"
