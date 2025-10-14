@@ -1,45 +1,45 @@
-name: EAS Preview
+ name: EAS Preview
 
-on:
-  push:
-    branches: [main, "feature/**"]
-  pull_request:
-    branches: [main]
-  workflow_dispatch: {}
+ on:
+   push:
+     branches: [ feature/ci-check-2, main ]
+   pull_request:
 
-jobs:
-  preview:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+ jobs:
+   android-preview:
+     runs-on: ubuntu-latest
++    env:
++      # прокидываем токен в окружение на весь job
++      EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
++      EXPO_TOKEN: ${{ secrets.EAS_TOKEN }}
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
+     steps:
+       - uses: actions/checkout@v4
 
-      - name: Install deps (robust)
-        run: |
-          if [ -f package-lock.json ]; then npm ci; else npm i; fi
+       - name: Setup Node
+         uses: actions/setup-node@v4
+         with:
+           node-version: 20
 
-      # >>> ОБЯЗАТЕЛЬНО: логин в EAS по токену <<<
-      - name: Expo/EAS login
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EAS_TOKEN }}
+       - name: Install deps
+         run: npm ci
 
-      - name: Preflight (init project non-interactive)
-        run: |
-          echo "== whoami ==" && eas whoami
-          echo "== init ==" && eas init --non-interactive || true
-          echo "== expo config json ==" && npx expo config --json || true
-          echo "== eas --version ==" && eas --version
+-      - name: Debug whoami (before)
+-        run: echo "== whoami ==" && eas whoami
++      - name: Login to EAS
++        run: |
++          echo "== login =="
++          # Явный логин токеном (без вывода токена в логи)
++          eas login --token "$EAS_TOKEN"
++          echo "== whoami =="
++          eas whoami
 
-      - name: Build Android preview
-        run: eas build --platform android --profile preview --non-interactive --no-wait
+       - name: EAS version
+         run: eas --version
 
-      # - name: Build iOS preview
-      #   run: eas build --platform ios --profile preview --non-interactive --no-wait
+       - name: Expo config (json)
+         run: npx expo config --json || true
+
+       - name: Build Android preview
+         run: |
+           eas build --platform android --profile preview --non-interactive --no-wait
