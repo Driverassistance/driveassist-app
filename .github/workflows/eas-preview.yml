@@ -8,36 +8,24 @@ on:
 jobs:
   android-preview:
     runs-on: ubuntu-latest
-
-    env:
-      EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
-      EXPO_TOKEN: ${{ secrets.EAS_TOKEN }}
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Setup Expo + EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EAS_TOKEN }}
+
+      - name: Install deps
         run: npm ci
 
-      - name: Login to EAS
-        run: |
-          echo "== login =="
-          eas login --token "$EAS_TOKEN"
-          echo "== whoami =="
-          eas whoami
+      - name: Show whoami
+        run: eas whoami
 
-      - name: Show EAS version
-        run: eas --version
-
-      - name: Show Expo config
-        run: npx expo config --json || true
-
-      - name: Build Android Preview
-        run: |
-          eas build --platform android --profile preview --non-interactive --no-wait
+      - name: Build Android (preview)
+        run: eas build --platform android --profile preview --non-interactive --no-wait
