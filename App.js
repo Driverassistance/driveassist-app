@@ -16,9 +16,7 @@ import * as Notifications from "expo-notifications";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "react-native";
 import { FlatList } from "react-native";
-import { create } from "twrnc";
-const tw = create(require("./tailwind.config.js"));
-
+import tw from "twrnc";
 
 
 // ===== MyCar: service storage =====
@@ -871,7 +869,6 @@ const tileSize = Math.floor((width - PADDING_H * 2 - GAP * (COLS - 1)) / COLS);
   )}
 />
       </View>
-BEGIN PATCH HOME-IDEA-RENDER-012
 {/* Карточка "Идея" (перетаскиваемая, с сохранением позиции) */}
 {ideaVisible && (
   <Animated.View
@@ -1703,7 +1700,7 @@ async function handleSend() {
   <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} keyboardVerticalOffset={80} style={tw`flex-1`}>
     {/* Лента сообщений */}
     <View style={tw`h-72 bg-[#0f172a] rounded-xl p-3 mb-2`}>
-      <ScrollView ref={(ref) => { /* auto-scroll вниз */ }}>
+      <ScrollView ref={(ref) => { /* auto-scroll вниз */ if (ref) { /* keep ref */ } }}>
         {messages.map((m) => (
           <View key={m.id} style={[
             tw`mb-2 max-w-[85%] p-2 rounded-xl`,
@@ -2236,9 +2233,9 @@ function handleRemoveTechpass() {
         {/* Сервис (сводка + CTA) */}
         <View style={{ backgroundColor: colors.card, borderRadius:16, borderWidth:1, borderColor: colors.border, padding:14, marginBottom:12 }}>
           <View style={{ flexDirection:'row', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
-            BEGIN PATCH MYC-UI-009A
+            
 <Text style={{ color: colors.text, fontWeight:'800', fontSize:16 }}>Сервисные данные</Text>
-END PATCH MYC-UI-009A
+
 
             <TouchableOpacity
               onPress={()=>setSvcOpen(true)}
@@ -2431,11 +2428,7 @@ END PATCH MYC-UI-009A
     </Text>
   </TouchableOpacity>
 </View>
-                    <View style={{ flex:1, marginLeft:6 }}>
-                      <TouchableOpacity onPress={()=>Alert.alert('Фото','Требуется expo-image-picker')} style={{ paddingVertical:10, borderRadius:12, alignItems:'center', backgroundColor: colors.card, borderWidth:1, borderColor: colors.border }}>
-                        <Text style={{ color: colors.text, fontWeight:'700' }}>Фото техпаспорта</Text>
-                      </TouchableOpacity>
-                    </View>
+                   
                   </View>
                 </View>
 {profile.techpassUri ? (
@@ -2480,7 +2473,7 @@ END PATCH MYC-UI-009A
           </View>
         </KeyboardAvoidingView>
       </Modal>
-BEGIN PATCH MYC-UI-009D
+
 <Modal visible={pinsOpen} transparent animationType="fade" onRequestClose={()=>setPinsOpen(false)}>
   <View style={{ flex:1, backgroundColor:'rgba(0,0,0,0.6)', justifyContent:'center', padding:16 }}>
     <View style={{ backgroundColor: colors.card, borderRadius:16, padding:12, maxHeight:'80%', width:'92%', alignSelf:'center' }}>
@@ -2526,7 +2519,7 @@ BEGIN PATCH MYC-UI-009D
     </View>
   </View>
 </Modal>
-END PATCH MYC-UI-009D
+
 
       {/* Пикер марок */}
       <Modal transparent visible={brandPickerOpen} animationType="fade" onRequestClose={()=>setBrandPickerOpen(false)}>
@@ -2777,7 +2770,6 @@ END PATCH MYC-UI-009D
     </SafeAreaView>
   );
 }
-// ===== END PATCH MYC-2025-10-09-FULL =====
 
 
 // --- News ---
@@ -2906,18 +2898,6 @@ function ExpensesScreen() {
   
   // FAB: позиция и перетаскивание
 const [fabPos] = React.useState(new Animated.ValueXY({ x: 16, y: 24 }));
-
-React.useEffect(() => {
-  (async () => {
-    try {
-      const raw = await AsyncStorage.getItem("expenses/fabPos");
-      if (raw) {
-        const p = JSON.parse(raw);
-        fabPos.setValue({ x: p.x ?? 16, y: p.y ?? 24 });
-      }
-    } catch(e){console.log("FAB pos load error", e);}
-  })();
-}, [fabPos]);
 
 const saveFab = async (x, y) => {
   try {
@@ -3096,10 +3076,12 @@ const [range, setRange] = React.useState('day'); // 'day'|'week'|'month'
 
 
 function openAddExpense(){
-  // тут используй тот же код, что уже стоит у твоей кнопки «Добавить»
-  // (если ты уже вынес, просто вызывай setOpen(true) / navigate на форму)
-  setOpen(true);
+  try { Haptics.selectionAsync(); } catch(e) {}
+  if (amountRef && amountRef.current && typeof amountRef.current.focus === 'function') {
+    amountRef.current.focus();
+  }
 }
+
 
 
 function _startOfWeek(d=new Date()){
@@ -3266,7 +3248,7 @@ const filteredList = React.useMemo(()=>{
   ))}
 </View>
 
-        /* Список за день */}
+         {/* Список за день */}
         {range==='day' && (
   <>
     {/* Список за день */}
@@ -3368,7 +3350,7 @@ const filteredList = React.useMemo(()=>{
               </View>
             ))
           )}
-          BEGIN PATCH EXP-TOP3-003-FIX
+          
           <View style={tw`border-t border-[#334155] mt-2 pt-2`}>
             {monthTop3.length > 0 && (
               <View>
@@ -3423,8 +3405,8 @@ const filteredList = React.useMemo(()=>{
 }
 
 // --- Прочие экраны из предыдущей версии для совместимости ---
-function ContactsScreen(){ return (<ScrollView style={tw`flex-1 bg-[#0b0b0f]`} contentContainerStyle={tw`p-4`}><Text style={{ color: colors.text, fontSize: 20, fontWeight: "800", marginBottom: 8 }}>Контакты</Text><Text style={tw`text-[#94a3b8]`}>Поддержка: support@joldas.kz{"\n"}Партнёрам: partners@joldas.kz</Text></ScrollView>); }
-function AboutScreen(){ return (<ScrollView style={tw`flex-1 bg-[#0b0b0f]`} contentContainerStyle={tw`p-4`}><Text style={{ color: colors.text, fontSize: 20, fontWeight: "800", marginBottom: 8 }}>О приложении</Text><Text style={tw`text-[#94a3b8]`}>MVP для микротеста. Разделы "в разработке" содержат описание будущего функционала.</Text></ScrollView>); }
+function ContactsScreen(){ const { colors } = useTheme(); return (<ScrollView style={tw`flex-1 bg-[#0b0b0f]`} contentContainerStyle={tw`p-4`}><Text style={{ color: colors.text, fontSize: 20, fontWeight: "800", marginBottom: 8 }}>Контакты</Text><Text style={tw`text-[#94a3b8]`}>Поддержка: support@joldas.kz{"\n"}Партнёрам: partners@joldas.kz</Text></ScrollView>); }
+function AboutScreen(){ const { colors } = useTheme(); return (<ScrollView style={tw`flex-1 bg-[#0b0b0f]`} contentContainerStyle={tw`p-4`}><Text style={{ color: colors.text, fontSize: 20, fontWeight: "800", marginBottom: 8 }}>О приложении</Text><Text style={tw`text-[#94a3b8]`}>MVP для микротеста. Разделы "в разработке" содержат описание будущего функционала.</Text></ScrollView>); }
 function HistoryScreen(){ const [items,setItems]=useState([]); useEffect(()=>{(async()=>{ const raw=await AsyncStorage.getItem('history'); const arr=raw?JSON.parse(raw):[]; setItems(arr.reverse()); })();},[]); return (<ScrollView style={tw`flex-1 bg-[#0b0b0f]`} contentContainerStyle={tw`p-4`}><Text style={{ color: colors.text, fontSize: 20, fontWeight: "800", marginBottom: 8 }}>История</Text><Card title={`События (${items.length})`}>{items.length===0?(<Text style={tw`text-[#94a3b8]`}>Пока пусто</Text>):(<FlatList data={items} keyExtractor={(_,i)=>String(i)} renderItem={({item})=>(<View style={tw`py-2 border-b border-[#1f2937] `}><Text style={tw`text-slate-300`}>{new Date(item.ts).toLocaleString()}</Text><Text style={tw`text-[#f1f5f9] font-bold`}>{item.name}</Text>{Object.keys(item).filter(k=>k!=='name'&&k!=='ts').length>0 && (<Text style={tw`text-[#94a3b8]`}>{JSON.stringify(item)}</Text>)}</View>)} />)}</Card></ScrollView>); }
 
 // ----------------- APP / НАВИГАЦИЯ -----------------
