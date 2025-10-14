@@ -1,45 +1,43 @@
- name: EAS Preview
+name: EAS Preview
 
- on:
-   push:
-     branches: [ feature/ci-check-2, main ]
-   pull_request:
+on:
+  push:
+    branches: [ "feature/ci-check-2", "main" ]
+  pull_request:
 
- jobs:
-   android-preview:
-     runs-on: ubuntu-latest
-+    env:
-+      # прокидываем токен в окружение на весь job
-+      EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
-+      EXPO_TOKEN: ${{ secrets.EAS_TOKEN }}
+jobs:
+  android-preview:
+    runs-on: ubuntu-latest
 
-     steps:
-       - uses: actions/checkout@v4
+    env:
+      EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
+      EXPO_TOKEN: ${{ secrets.EAS_TOKEN }}
 
-       - name: Setup Node
-         uses: actions/setup-node@v4
-         with:
-           node-version: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-       - name: Install deps
-         run: npm ci
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
--      - name: Debug whoami (before)
--        run: echo "== whoami ==" && eas whoami
-+      - name: Login to EAS
-+        run: |
-+          echo "== login =="
-+          # Явный логин токеном (без вывода токена в логи)
-+          eas login --token "$EAS_TOKEN"
-+          echo "== whoami =="
-+          eas whoami
+      - name: Install dependencies
+        run: npm ci
 
-       - name: EAS version
-         run: eas --version
+      - name: Login to EAS
+        run: |
+          echo "== login =="
+          eas login --token "$EAS_TOKEN"
+          echo "== whoami =="
+          eas whoami
 
-       - name: Expo config (json)
-         run: npx expo config --json || true
+      - name: Show EAS version
+        run: eas --version
 
-       - name: Build Android preview
-         run: |
-           eas build --platform android --profile preview --non-interactive --no-wait
+      - name: Show Expo config
+        run: npx expo config --json || true
+
+      - name: Build Android Preview
+        run: |
+          eas build --platform android --profile preview --non-interactive --no-wait
