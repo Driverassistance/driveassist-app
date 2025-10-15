@@ -1,31 +1,56 @@
-name: EAS Preview
+name: EAS Android Preview
 
 on:
   push:
-    branches: [ "feature/ci-check-2", "main" ]
-  pull_request:
+    branches:
+      - main
+      - feature/**
+  workflow_dispatch:
+
+concurrency:
+  group: eas-android-preview-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   android-preview:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+    env:
+      # важное: нужен только EAS_TOKEN
+      EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: Setup Expo + EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EAS_TOKEN }}
+          cache: 'npm'
 
       - name: Install deps
         run: npm ci
 
-      - name: Show whoami
-        run: eas whoami
+      - name: Install EAS CLI
+        run: npm i -g eas-cli
 
-      - name: Build Android (preview)
-        run: eas build --platform android --profile preview --non-interactive --no-wait
+      - name: Login to EAS (non-interactive)
+        run: |
+          echo "== login =="
+          eas login --token "$EAS_TOKEN"
+          echo "== whoami =="
+          eas whoami
+
+      # не обязательно, но удобно для дебага конфигурации
+      - name: Show Expo config
+        run: npx expo config --json || true
+
+      # запуск cloud build (без ожидания)
+      - name: Trigger EAS Android preview build
+        run: |
+          eas build \
+            --platform android \
+            --profile preview \
+            --non-interactive \
+            --no-wait
