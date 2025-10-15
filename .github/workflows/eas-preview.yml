@@ -1,0 +1,11 @@
+name: EAS Preview (on hold)
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: CI is on hold
+        run: echo "CI is paused. Enable triggers later."
