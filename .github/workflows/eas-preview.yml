@@ -1,3 +1,16 @@
+name: EAS Android Preview
+
+on:
+  push:
+    branches:
+      - main
+      - feature/**
+  workflow_dispatch:
+
+jobs:
+  android-preview:
+    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -9,7 +22,12 @@
           cache: npm
 
       - name: Install deps
-        run: npm i --no-audit --no-fund
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci --no-audit --no-fund
+          else
+            npm i --no-audit --no-fund
+          fi
 
       - name: Install EAS CLI
         run: npm i -g eas-cli
@@ -19,7 +37,7 @@
           EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
         run: |
           if [ -z "$EAS_TOKEN" ]; then
-            echo "❌ EAS_TOKEN secret отсутствует (пустой). Задай его в Settings → Secrets → Actions."
+            echo "❌ EAS_TOKEN secret отсутствует. Задай его в Settings → Secrets and variables → Actions."
             exit 1
           fi
           echo "== login =="
@@ -31,6 +49,9 @@
         run: npx expo config --json || true
 
       - name: Trigger EAS Android preview build
+        env:
+          EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
           eas build \
             --platform android \
